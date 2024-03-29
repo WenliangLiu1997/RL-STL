@@ -3,7 +3,7 @@
 This is the implementation of the algorithm in the paper "Safe Model-based Control from Signal Temporal Logic Specifications Using Recurrent Neural Networks", ICRA 2023. This code is for simulating the fire-fighting experiment in the paper. Details can be found in the paper.
 
 ## Installation
-You need Python3, Numpy, Gurobi, and Pytorch installed
+You need to install Python3, Numpy, Gurobi, and Pytorch. The code includes a modified version of the STLCG (https://github.com/StanfordASL/stlcg) toolbox.
 
 ## Usage
 - Run initial_dataset.py to generate the initial dataset.
