@@ -11,7 +11,7 @@ You need Python3, Numpy, Gurobi, and Pytorch installed
 
 ## Citation
 When citing our work, please use the following BibTex:
-'''
+```
 @inproceedings{liu2023safe,
   title={Safe model-based control from signal temporal logic specifications using recurrent neural networks},
   author={Liu, Wenliang and Nishioka, Mirai and Belta, Calin},
@@ -20,4 +20,4 @@ When citing our work, please use the following BibTex:
   year={2023},
   organization={IEEE}
 }
-'''
+```
