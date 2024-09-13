@@ -70,7 +70,7 @@ class Maxish(torch.nn.Module):
             assert x._value is not None, "Input Expression does not have numerical values"
             x = x._value
         
-        # AGM Eventually and Or
+        # Dimos Eventually and Or
         return -self.operation(-x,scale,dim,keepdim)
         
 
@@ -93,7 +93,7 @@ class Minish(torch.nn.Module):
             assert x._value is not None, "Input Expression does not have numerical values"
             x = x._value
 
-        # New Always and And. For And, dim=-1, for always, dim=1
+        # Dimos Always and And.
         output = torch.zeros(x.size()[:3]).to(x.device) # x:[batch_size, step_size, x_dim=1, 2]; output:[batch_size, step_size, 1]
         rho_min = x.min(dim, keepdim=True)[0]
         rho_tilda = (x - rho_min) / (rho_min+SMALL_NUMBER)
@@ -101,7 +101,7 @@ class Minish(torch.nn.Module):
         g_idx = torch.nonzero(torch.squeeze(rho_min,dim)>0,as_tuple=True) #  indexes for rho_min >0
         e_idx = torch.nonzero(torch.squeeze(rho_min,dim)==0,as_tuple=True) # indexes for rho_min = 0
         output[l_idx] = (torch.softmax(scale * rho_tilda[l_idx[0],l_idx[1],l_idx[2],:], dim=dim)*rho_min[l_idx[0],l_idx[1],l_idx[2],:]*torch.exp(rho_tilda[l_idx[0],l_idx[1],l_idx[2],:])).sum(dim,keepdim=keepdim)
-        output[g_idx] = (torch.softmax(-scale * rho_tilda[g_idx[0],g_idx[1],g_idx[2],:], dim=dim)*rho_min[g_idx[0],g_idx[1],g_idx[2],:]).sum(dim,keepdim=keepdim)
+        output[g_idx] = (torch.softmax(-scale * rho_tilda[g_idx[0],g_idx[1],g_idx[2],:], dim=dim)*x[g_idx[0],g_idx[1],g_idx[2],:]).sum(dim,keepdim=keepdim)
         output[e_idx] = 0
         return output
         
@@ -125,7 +125,7 @@ class Always_new(torch.nn.Module):
             assert x._value is not None, "Input Expression does not have numerical values"
             x = x._value
             
-        # AGM Always and And
+        # Dimos Always and And
         output = torch.zeros(x.size(0),1,x.size(2)).to(x.device) # x:[batch_size, step_size, x_dim=1]; output:[batch_size, 1, x_dim=1]
         rho_min = x.min(dim, keepdim=keepdim)[0]
         rho_tilda = (x - rho_min) / (rho_min+SMALL_NUMBER)
@@ -133,7 +133,7 @@ class Always_new(torch.nn.Module):
         g_idx = torch.nonzero(rho_min>0,as_tuple=True) #  indexes for rho_min >0
         e_idx = torch.nonzero(rho_min==0,as_tuple=True) # indexes for rho_min = 0
         output[l_idx] = (torch.softmax(scale * rho_tilda[l_idx[0],:,l_idx[2]], dim=dim)*rho_min[l_idx[0],:,l_idx[2]]*torch.exp(rho_tilda[l_idx[0],:,l_idx[2]])).sum(dim,keepdim=False)
-        output[g_idx] = (torch.softmax(-scale * rho_tilda[g_idx[0],:,g_idx[2]], dim=dim)*rho_min[g_idx[0],:,g_idx[2]]).sum(dim,keepdim=False)
+        output[g_idx] = (torch.softmax(-scale * rho_tilda[g_idx[0],:,g_idx[2]], dim=dim)*x[g_idx[0],:,g_idx[2]]).sum(dim,keepdim=False)
         output[e_idx] = 0
 
         return output
@@ -159,7 +159,7 @@ class Eventually_new(torch.nn.Module):
             assert x._value is not None, "Input Expression does not have numerical values"
             x = x._value
             
-        # AGM Eventually and Or
+        # Dimos Eventually and Or
         return -self.operation(-x, scale, dim, keepdim)
 
     def _next_function(self):
