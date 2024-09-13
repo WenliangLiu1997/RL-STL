@@ -180,7 +180,7 @@ def system_nn(q0, steps): # q0: [batch_size, q_dim]
     q[:,0,:] = q0
     h_state = None
     for i in range(steps):
-        u_i, h_state_n = rnn(q[:,i,:].view(-1,1,Q_dim),h_state) # u_i: [batch_size, time_step = 1, u_dim]
+        u_i, h_state_n = rnn(q[:,i,:].view(-1,1,Q_dim).clone(),h_state) # u_i: [batch_size, time_step = 1, u_dim]
         u[:,i,:] = u_i[:,0,:] 
         h_state = h_state_n
 
